@@ -5,8 +5,8 @@ import { useEffect, useState } from "react"
 export default function Calculator() {
   const [subTotal, setSubTotal] = useState<number | undefined>(undefined)
   const [percentage, setPercentage] = useState<number | undefined>(undefined)
-  const [tipResult, setTipResult] = useState<number | undefined>(undefined)
-  const [totalResult, setTotalResult] = useState<number | undefined>(undefined)
+  const [tipResult, setTipResult] = useState<string | undefined>(undefined)
+  const [totalResult, setTotalResult] = useState<string | undefined>(undefined)
 
   const handleSubTotalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSubTotal(Number(e.target.value))
@@ -24,8 +24,16 @@ export default function Calculator() {
       setTipResult(undefined)
       setTotalResult(undefined)
     } else {
-      setTipResult(Math.round((subTotal * percentage) * 100) / 100)
-      setTotalResult(Math.round((subTotal + (subTotal * percentage)) * 100) / 100)
+      const tip = Math.round((subTotal * percentage) * 100) / 100
+      setTipResult(tip.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }))
+      const total = Math.round((subTotal + (subTotal * percentage)) * 100) / 100
+      setTotalResult(total.toLocaleString('en-US', {
+        style: "currency",
+        currency: 'USD',
+      }))
     }
 
 
@@ -53,10 +61,10 @@ export default function Calculator() {
         <div className="h-52 flex flex-col gap-4 items-center mt-8">
           <p>Tip amount:</p>
           <div className="h-16">
-            <p className="text-4xl font-bold">{tipResult ? `$${tipResult}` : ''}</p>
+            <p className="text-4xl font-bold">{tipResult ?? ''}</p>
           </div>
           <p>Total Bill:</p>
-          <p className="text-4xl font-bold">{totalResult ? `$${totalResult}` : ''}</p>
+          <p className="text-4xl font-bold">{totalResult ?? ''}</p>
         </div>
       </form>
     </div>
